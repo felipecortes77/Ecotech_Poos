@@ -3,4 +3,4 @@ class RegistroTiempo:
         self.fecha = fecha
         self.horas = horas
     def mostrar_horas(self) -> str:
-        return f"En la fecha {self.fecha} se trabajaron {self.horas} horas"
+        return f"{self.horas} horas en la fecha {self.fecha}"
