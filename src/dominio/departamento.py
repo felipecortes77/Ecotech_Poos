@@ -2,7 +2,8 @@
 from dominio.empleado import Empleado
 
 class Departamento:
-    def __init__(self, nombre: str):
+    def __init__(self, nombre: str, id=None):
+        self.id = id
         self.nombre = nombre
         self._empleados: list[Empleado] = []
 

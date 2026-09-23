@@ -1,7 +1,8 @@
 from dominio.registrotiempo import RegistroTiempo
 
 class Empleado:
-    def __init__(self, nombre: str, correo: str):
+    def __init__(self, nombre: str, correo: str, id=None):
+        self.id = id
         self.nombre = nombre
         self.correo = correo
         self.horas_registradas :list[RegistroTiempo] = []
