@@ -47,6 +47,7 @@
 # for empleado in desarrollo._empleados:
 #     print(empleado.mostrar_datos())
 
+##############################################################################################
 
 # main.py
 from persistencia.crear_bd import crear_tablas
@@ -72,11 +73,30 @@ empleado1 = Empleado(
     correo="juan.torres@ecotech.cl"
 )
 
+EmpleadoDAO.actualizar(Empleado(
+    id=6,
+    nombre = "Jorge torres",
+    correo = "jorge.torres@ecotech.cl"
+))
+
 #EmpleadoDAO.insertar(empleado)
 
-encontrado = EmpleadoDAO.buscar_por_id(empleado.correo)
-print("Encontrado:", encontrado)
+encontrado = EmpleadoDAO.buscar_por_id(999)
+if(encontrado):
+    print("Encontrado:", encontrado.mostrar_datos())
+else:
+    print("no encontrado")
 
-# print("Listado:")
-# for item in EmpleadoDAO.listar():
-#     print(item)
+
+print("Listado:")
+for item in EmpleadoDAO.listar():
+    print(item.mostrar_datos())
+
+try:
+    eliminado = EmpleadoDAO.eliminar(6)
+    if(eliminado):
+        print("Se elimino correctamente")
+    else:
+        print("No se encontro la ID")
+except:
+    print("Error")

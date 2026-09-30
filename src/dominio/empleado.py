@@ -8,7 +8,7 @@ class Empleado:
         self.horas_registradas :list[RegistroTiempo] = []
 
     def mostrar_datos(self) -> str:
-        return f"{self.nombre} - {self.correo}"
+        return f"ID: {self.id} - {self.nombre} - {self.correo}"
 
     def registrar_tiempo(self,tiempo: RegistroTiempo):
         self.horas_registradas.append(tiempo)

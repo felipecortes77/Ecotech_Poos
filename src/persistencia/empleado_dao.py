@@ -85,3 +85,56 @@ class EmpleadoDAO:
                 )
             )
         return empleados
+
+    @staticmethod
+    def actualizar(empleado):
+        conexion = None
+        try:
+            conexion = abrir_conexion()
+            cursor = conexion.cursor()
+        
+            marca = marcador_sql()
+            sql = (
+                "UPDATE empleado "
+                f"SET nombre = {marca}, correo = {marca} "
+                f"WHERE id = {marca}"
+            )
+        
+            cursor.execute(
+                sql,
+                (
+                    empleado.nombre,
+                    empleado.correo,
+                    empleado.id
+                )
+            )
+        
+            conexion.commit()
+            return cursor.rowcount > 0
+        
+        except Exception:
+            if conexion:
+                conexion.rollback()
+            raise
+        
+        finally:
+            if conexion:
+                conexion.close()
+
+    @staticmethod
+    def eliminar(id_empleado):
+        conexion = abrir_conexion()
+        cursor = conexion.cursor()
+        
+        marca = marcador_sql()
+        sql = (
+            "DELETE FROM empleado "
+            f"WHERE id = {marca}"
+        )
+        
+        cursor.execute(sql, (id_empleado,))
+        conexion.commit()
+        
+        eliminado = cursor.rowcount > 0
+        conexion.close()
+        return eliminado
