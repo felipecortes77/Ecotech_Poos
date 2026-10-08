@@ -9,10 +9,10 @@ class DepartamentoDAO:
         marcador = "?" if obtener_motor() == "sqlite" else "%s"
         
         sql = f"""
-            INSERT INTO departamento (nombre)
+            INSERT INTO departamento (nombre, _empleados)
             VALUES ({marcador}, {marcador})
         """
-        cursor.execute(sql, (departamento.nombre))
+        cursor.execute(sql, (departamento.nombre, departamento._empleados))
         departamento.id = cursor.lastrowid
         conexion.commit()
         conexion.close()

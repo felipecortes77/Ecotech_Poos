@@ -1,9 +1,38 @@
 from persistencia.crear_bd import crear_tablas
 from dominio.empleado import Empleado
 from persistencia.empleado_dao import EmpleadoDAO
-import sys 
 
-crear_tablas()
+def menu_empleados():
+    print("\n===== ECOTECH =====")
+    print("1. Registrar empleado")
+    print("2. Listar empleados")
+    print("3. Buscar empleado")
+    print("4. Actualizar empleado")
+    print("5. Eliminar empleado")
+    print("0. Salir")
+
+    opcion = input("Seleccione una opción: ")
+    if opcion == "1":
+        registrar_empleado()
+        menu_empleados()
+    elif opcion == "2":
+        listar_empleados()
+        input("Enter para continuar")
+        menu_empleados()
+    elif opcion == "3":
+        buscar_empleado()
+        menu_empleados()
+    elif opcion == "4":
+        actualizar_empleado()
+        menu_empleados()
+    elif opcion == "5":
+        eliminar_empleado()
+        menu_empleados()
+    elif opcion == "0":
+        print("")
+    else:
+        print("Opción no válida.")
+        menu_empleados()
 
 def registrar_empleado():
     nombre = input("Nombre: ").strip()
@@ -91,4 +120,4 @@ def buscar_empleado():
     if(encontrado):
         print("Encontrado:", encontrado.mostrar_datos())
     else:
-        print("no encontrado")
+        print("La ID no pertenece a ningún empleado")

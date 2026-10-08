@@ -11,7 +11,7 @@
 # empleado2 = Empleado(
 #     nombre = "Juanito Torres",
 #     correo ="juanito.torres@ecotech.cl"
-# )
+# )0
 
 # empleado3 = Empleado(
 #     nombre = "Pepe Tapia",
@@ -79,19 +79,20 @@
 # #EmpleadoDAO.insertar(empleado)
 
 
-from presentacion.menu_empleado import EmpleadoDAO, menu_empleados
-from presentacion.menu_departamento import menu_departamentos
-from presentacion.menu_proyecto import menu_proyectos
+from presentacion.menu_empleado import menu_empleados
+# from presentacion.menu_departamento import menu_departamentos
+# from presentacion.menu_proyecto import menu_proyectos
 
 
 
 def main():
     while True:
+        print("\n===== ECOTECH =====")
         print("Menú Principal:")
         print("1. Gestión de Empleados")
         print("2. Gestión de Departamentos")
         print("3. Gestión de Proyectos")
-        print("4. Salir")
+        print("0. Salir")
 
         opcion = input("Seleccione una opción: ")
 
@@ -101,11 +102,12 @@ def main():
             menu_departamentos()
         elif opcion == "3":
             menu_proyectos()
-        elif opcion == "4":
+        elif opcion == "0":
             print("Saliendo del programa...")
             break
         else:
             print("Opción inválida. Por favor, seleccione una opción válida.")
 
 
-    
+if __name__ == "__main__":
+    main()
