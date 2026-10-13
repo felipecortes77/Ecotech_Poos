@@ -2,6 +2,8 @@ from dominio.empleado import Empleado
 from persistencia.departamento_dao import DepartamentoDAO
 from persistencia.empleado_dao import EmpleadoDAO
 from presentacion.menu_departamento import listar_departamentos
+from persistencia.departamento_dao import DepartamentoDAO
+
 
 
 def menu_empleados():
@@ -41,29 +43,47 @@ def pedir_id(mensaje: str):
         print("La ID debe ser un número.")
         return None
 
+def mostrar_departamentos():
+    try:
+        departamentos = DepartamentoDAO.listar()
+        if not departamentos:
+            print("No hay departamentos registrados.")
+            return False
+        print("Departamentos disponibles:")
+        for item in departamentos:
+            print(item.mostrar_datos())
+        return True
+    except Exception as e:
+        print(f"Error al listar los departamentos: {e}")
+        return False
 
 def registrar_empleado():
     nombre = input("Nombre: ").strip()
     correo = input("Correo: ").strip()
-    listar_departamentos()
-    departamento = input("ID Departamento: ").strip()
 
-    if not nombre or not correo or not departamento:
-        print("El nombre, el correo y el departamento no pueden estar vacíos.")
+    if not nombre or not correo:
+        print("El nombre y el correo no pueden estar vacíos.")
         return
 
-    if not departamento.isdigit():
-        print("La ID del departamento debe ser un número.")
-        return
+    id_departamento = None
+    if mostrar_departamentos():
+        texto = input("ID del departamento (Enter para omitir): ").strip()
+        if texto:
+            try:
+                id_departamento = int(texto)
+            except ValueError:
+                print("La ID debe ser un número.")
+                return
 
-    if DepartamentoDAO.buscar_por_id(int(departamento)) is None:
-        print("La ID del departamento no existe.")
-        return
-
-    empleado = Empleado(nombre, correo, int(departamento))
     try:
+        if id_departamento is not None:
+            if DepartamentoDAO.buscar_por_id(id_departamento) is None:
+                print("No existe un departamento con esa ID.")
+                return
+
+        empleado = Empleado(nombre, correo, id_departamento=id_departamento)
         EmpleadoDAO.insertar(empleado)
-        print(f"Empleado registrado correctamente. ID: {empleado.id}")
+        print(f"Empleado registrado correctamente. ID: {empleado.get_id()}")
     except Exception as e:
         print(f"No fue posible registrar el empleado: {e}")
 
@@ -79,6 +99,7 @@ def listar_empleados():
             print(item.mostrar_datos())
     except Exception as e:
         print(f"Error al listar los empleados: {e}")
+
 
 
 def buscar_empleado():

@@ -47,4 +47,4 @@ Con el entorno virtual activo y desde la raiz del repositorio:
 python src/main.py
 ```
 
-El menu principal permite entrar al menu de empleados o salir. Las opciones de departamentos y otros modelos aun no estan conectadas al menu de la aplicacion.
+El menu principal permite entrar al menu de empleados, menu de departamentos, menu de proyectos y menus de registro de tiempo.
