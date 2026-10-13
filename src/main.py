@@ -95,7 +95,7 @@ from presentacion.menu_registrotiempo import menu_registro_tiempo
 def menu_principal():
     opcion = ""
     while opcion != "0":
-        print("\n----- ECOTECH -----")
+        print("\n-----MENU PRINCIPAL ECOTECH -----")
         print("1. Departamentos")
         print("2. Empleados")
         print("3. Proyectos")
