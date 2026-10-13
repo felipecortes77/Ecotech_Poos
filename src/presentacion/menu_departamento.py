@@ -45,6 +45,7 @@ def registrar_departamento():
     if not nombre:
         print("El nombre no puede estar vacío.")
         return
+    
 
     departamento = Departamento(nombre)
     try:
@@ -113,6 +114,9 @@ def eliminar_departamento():
     id_departamento = pedir_id("Ingrese la ID del departamento: ")
     if id_departamento is None:
         return
+    
+    
+
 
     try:
         eliminado = DepartamentoDAO.eliminar(id_departamento)

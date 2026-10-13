@@ -3,9 +3,29 @@ from dominio.empleado import Empleado
 
 class Departamento:
     def __init__(self, nombre: str, id=None):
-        self.id = id
-        self.nombre = nombre
+        self._id = id
+        self._nombre = nombre
         self._empleados: list[Empleado] = []
+
+    @property
+    def id(self):
+        return self._id
+
+    @id.setter
+    def id(self, valor):
+        self._id = valor
+
+    @property
+    def nombre(self):
+        return self._nombre
+
+    @nombre.setter
+    def nombre(self, valor):
+        self._nombre = valor
+
+    @property
+    def empleados(self) -> tuple:
+        return tuple(self._empleados)
 
     def mostrar_datos(self) -> str:
         return f"ID: {self.id} - {self.nombre}"
@@ -16,10 +36,6 @@ class Departamento:
 
         self._empleados.append(empleado)
         return True
-
-    @property
-    def empleados(self) -> tuple:
-        return tuple(self._empleados)
 
     def cantidad_empleados(self) -> int:
         return len(self._empleados)
