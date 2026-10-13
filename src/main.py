@@ -79,11 +79,11 @@
 # #EmpleadoDAO.insertar(empleado)
 
 # main.py
-from persistencia.crear_bd import crear_tablas
-from presentacion.menu_departamento import menu_departamento
-from presentacion.menu_empleado import menu_empleados
-from presentacion.menu_proyecto import menu_proyecto
-from presentacion.menu_registrotiempo import menu_registro_tiempo
+# from persistencia.crear_bd import crear_tablas
+# from presentacion.menu_departamento import menu_departamento
+# from presentacion.menu_empleado import menu_empleados
+# from presentacion.menu_proyecto import menu_proyecto
+# from presentacion.menu_registrotiempo import menu_registro_tiempo
 
 
 from persistencia.crear_bd import crear_tablas
@@ -91,7 +91,6 @@ from presentacion.menu_departamento import menu_departamento
 from presentacion.menu_empleado import menu_empleados
 from presentacion.menu_proyecto import menu_proyecto
 from presentacion.menu_registrotiempo import menu_registro_tiempo
-
 
 def menu_principal():
     opcion = ""
@@ -124,5 +123,5 @@ if __name__ == "__main__":
         crear_tablas()
     except Exception as e:
         print(f"No se pudo preparar la base de datos: {e}")
-    else:
-        menu_principal()
+    
+    menu_principal()

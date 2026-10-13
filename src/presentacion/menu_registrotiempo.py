@@ -2,6 +2,8 @@ from dominio.registrotiempo import RegistroTiempo
 from persistencia.registrotiempo_dao import RegistroTiempoDAO
 from persistencia.empleado_dao import EmpleadoDAO
 from persistencia.proyecto_dao import ProyectoDAO
+from presentacion.menu_empleado import listar_empleados
+from presentacion.menu_proyecto import listar_proyectos
 
 
 def menu_registro_tiempo():
@@ -69,10 +71,12 @@ def registrar_tiempo():
     if horas is None:
         return
 
+    listar_empleados()
     id_empleado = pedir_id("ID del empleado: ")
     if id_empleado is None:
         return
 
+    listar_proyectos()
     id_proyecto = pedir_id("ID del proyecto: ")
     if id_proyecto is None:
         return
@@ -112,6 +116,7 @@ def listar_registros():
 
 
 def listar_registros_por_empleado():
+    listar_empleados()
     id_empleado = pedir_id("ID del empleado: ")
     if id_empleado is None:
         return

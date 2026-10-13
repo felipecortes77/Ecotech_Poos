@@ -4,5 +4,5 @@ class Proyecto:
         self.nombre = nombre
         self.fecha_inicio = fecha_inicio
 
-def mostrar_datos(self) -> str:
-    return f"ID: {self.id} - {self.nombre} - Inicio: {self.fecha_inicio}"
+    def mostrar_datos(self) -> str:
+        return f"ID: {self.id} - {self.nombre} - Inicio: {self.fecha_inicio}"

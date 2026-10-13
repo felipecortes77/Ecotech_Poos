@@ -5,7 +5,7 @@ from persistencia.proyecto_dao import ProyectoDAO
 def menu_proyecto():
     opcion = ""
     while opcion != "0":
-        print("\n===== PROYECTOS =====")
+        print("\n----- PROYECTOS -----")
         print("1. Registrar proyecto")
         print("2. Listar proyectos")
         print("3. Buscar proyecto")

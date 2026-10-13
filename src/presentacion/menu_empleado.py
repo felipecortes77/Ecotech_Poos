@@ -1,5 +1,7 @@
 from dominio.empleado import Empleado
+from persistencia.departamento_dao import DepartamentoDAO
 from persistencia.empleado_dao import EmpleadoDAO
+from presentacion.menu_departamento import listar_departamentos
 
 
 def menu_empleados():
@@ -43,12 +45,22 @@ def pedir_id(mensaje: str):
 def registrar_empleado():
     nombre = input("Nombre: ").strip()
     correo = input("Correo: ").strip()
+    listar_departamentos()
+    departamento = input("ID Departamento: ").strip()
 
-    if not nombre or not correo:
-        print("El nombre y el correo no pueden estar vacíos.")
+    if not nombre or not correo or not departamento:
+        print("El nombre, el correo y el departamento no pueden estar vacíos.")
         return
 
-    empleado = Empleado(nombre, correo)
+    if not departamento.isdigit():
+        print("La ID del departamento debe ser un número.")
+        return
+
+    if DepartamentoDAO.buscar_por_id(int(departamento)) is None:
+        print("La ID del departamento no existe.")
+        return
+
+    empleado = Empleado(nombre, correo, int(departamento))
     try:
         EmpleadoDAO.insertar(empleado)
         print(f"Empleado registrado correctamente. ID: {empleado.id}")
