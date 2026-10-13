@@ -92,6 +92,8 @@ from presentacion.menu_empleado import menu_empleados
 from presentacion.menu_proyecto import menu_proyecto
 from presentacion.menu_registrotiempo import menu_registro_tiempo
 
+
+
 def menu_principal():
     opcion = ""
     while opcion != "0":
@@ -119,6 +121,9 @@ def menu_principal():
 
 
 if __name__ == "__main__":
+    from persistencia.conexion import obtener_motor
+    print("Motor:", obtener_motor())
+
     try:
         crear_tablas()
     except Exception as e:
