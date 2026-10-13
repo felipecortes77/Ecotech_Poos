@@ -1,25 +1,26 @@
-# persistencia/conexion.py
 import os
 import sqlite3
 import pymysql
 from dotenv import load_dotenv
+
 load_dotenv()
 
-# persistencia/conexion.py
+
+def obtener_motor():
+    return os.getenv("DB_ENGINE", "sqlite").lower()
+
+
 def marcador_sql():
     if obtener_motor() == "sqlite":
         return "?"
     return "%s"
 
 
-def obtener_motor():
-    return os.getenv("DB_ENGINE", "sqlite").lower()
-
 def abrir_conexion():
     motor = obtener_motor()
     if motor == "sqlite":
         return sqlite3.connect(os.getenv("DB_NAME", "ecotech.db"))
-    
+
     if motor == "mysql":
         return pymysql.connect(
             host=os.getenv("DB_HOST", "localhost"),

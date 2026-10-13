@@ -1,15 +1,16 @@
 from dominio.registrotiempo import RegistroTiempo
 
+
 class Empleado:
     def __init__(self, nombre: str, correo: str, id=None):
         self.id = id
         self.nombre = nombre
         self.correo = correo
-        self.horas_registradas :list[RegistroTiempo] = []
+        self.horas_registradas: list[RegistroTiempo] = []
 
     def mostrar_datos(self) -> str:
         return f"ID: {self.id} - {self.nombre} - {self.correo}"
 
-    def registrar_tiempo(self,tiempo: RegistroTiempo):
+    def registrar_tiempo(self, tiempo: RegistroTiempo) -> bool:
         self.horas_registradas.append(tiempo)
         return True

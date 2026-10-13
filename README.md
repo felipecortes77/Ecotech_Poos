@@ -3,8 +3,8 @@
 Aplicacion de consola en Python para administrar empleados. Permite registrar, listar, buscar, actualizar y eliminar empleados mediante un menu interactivo. El proyecto tambien contiene modelos de dominio para departamentos, proyectos y registros de tiempo.
 
 ## Estructura
-
-- `src/main.py`: punto de entrada y menus de la aplicacion.
+- `src/presentacion`: distintos menus
+- `src/main.py`: punto de entrada  para los menus de la aplicacion.
 - `src/dominio/`: modelos de empleado, departamento, proyecto y registro de tiempo.
 - `src/persistencia/`: conexion a la base de datos, creacion de tablas y objetos de acceso a datos.
 - `requirements.txt`: dependencias de Python.

@@ -78,36 +78,51 @@
 
 # #EmpleadoDAO.insertar(empleado)
 
-
+# main.py
+from persistencia.crear_bd import crear_tablas
+from presentacion.menu_departamento import menu_departamento
 from presentacion.menu_empleado import menu_empleados
-# from presentacion.menu_departamento import menu_departamentos
-# from presentacion.menu_proyecto import menu_proyectos
+from presentacion.menu_proyecto import menu_proyecto
+from presentacion.menu_registrotiempo import menu_registro_tiempo
 
 
+from persistencia.crear_bd import crear_tablas
+from presentacion.menu_departamento import menu_departamento
+from presentacion.menu_empleado import menu_empleados
+from presentacion.menu_proyecto import menu_proyecto
+from presentacion.menu_registrotiempo import menu_registro_tiempo
 
-def main():
-    while True:
-        print("\n===== ECOTECH =====")
-        print("Menú Principal:")
-        print("1. Gestión de Empleados")
-        print("2. Gestión de Departamentos")
-        print("3. Gestión de Proyectos")
+
+def menu_principal():
+    opcion = ""
+    while opcion != "0":
+        print("\n----- ECOTECH -----")
+        print("1. Departamentos")
+        print("2. Empleados")
+        print("3. Proyectos")
+        print("4. Registro de tiempo")
         print("0. Salir")
 
-        opcion = input("Seleccione una opción: ")
+        opcion = input("Seleccione una opción: ").strip()
 
         if opcion == "1":
-            menu_empleados()
+            menu_departamento()
         elif opcion == "2":
-            menu_departamentos()
+            menu_empleados()
         elif opcion == "3":
-            menu_proyectos()
+            menu_proyecto()
+        elif opcion == "4":
+            menu_registro_tiempo()
         elif opcion == "0":
-            print("Saliendo del programa...")
-            break
+            print("Hasta luego.")
         else:
-            print("Opción inválida. Por favor, seleccione una opción válida.")
+            print("Opción no válida.")
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        crear_tablas()
+    except Exception as e:
+        print(f"No se pudo preparar la base de datos: {e}")
+    else:
+        menu_principal()
