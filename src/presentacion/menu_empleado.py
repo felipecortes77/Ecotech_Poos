@@ -43,11 +43,21 @@ def pedir_id(mensaje: str):
         print("La ID debe ser un número.")
         return None
 
+def nombre_valido(nombre: str) -> bool:
+    if not nombre or not nombre.strip():
+        return False
+    for caracter in nombre:
+        if not (caracter.isalpha() or caracter == " "):
+            return False
+    return True
+
+
 def mostrar_departamentos():
     try:
         departamentos = DepartamentoDAO.listar()
         if not departamentos:
             print("No hay departamentos registrados.")
+            input("Enter para continuar")
             return False
         print("Departamentos disponibles:")
         for item in departamentos:
@@ -83,7 +93,7 @@ def registrar_empleado():
 
         empleado = Empleado(nombre, correo, id_departamento=id_departamento)
         EmpleadoDAO.insertar(empleado)
-        print(f"Empleado registrado correctamente. ID: {empleado.get_id()}")
+        print(f"Empleado registrado correctamente. ID: {empleado.id()}")
     except Exception as e:
         print(f"No fue posible registrar el empleado: {e}")
 

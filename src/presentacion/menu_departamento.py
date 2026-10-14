@@ -40,17 +40,28 @@ def pedir_id(mensaje: str):
         return None
 
 
+def nombre_valido(nombre: str) -> bool:
+    if not nombre or not nombre.strip():
+        return False
+    for caracter in nombre:
+        if not (caracter.isalpha() or caracter == " "):
+            return False
+    return True
+
+
 def registrar_departamento():
     nombre = input("Nombre: ").strip()
     if not nombre:
         print("El nombre no puede estar vacío.")
         return
-    
+    if not nombre_valido(nombre):
+        print("El nombre solo puede contener letras y espacios.")
+        return
 
     departamento = Departamento(nombre)
     try:
         DepartamentoDAO.insertar(departamento)
-        print(f"Departamento registrado correctamente. ID: {departamento.id}")
+        print(f"Departamento registrado correctamente. ID: {departamento.id()}")
     except Exception as e:
         print(f"No fue posible registrar el departamento: {e}")
 
@@ -61,15 +72,18 @@ def listar_departamentos():
         departamentos = DepartamentoDAO.listar()
         if not departamentos:
             print("No hay departamentos registrados.")
-            return
+            return False
         for item in departamentos:
             print(item.mostrar_datos())
+        return True
     except Exception as e:
         print(f"Error al listar los departamentos: {e}")
+        return False
 
 
 def buscar_departamento():
-    listar_departamentos()
+    if not listar_departamentos():
+        return
     id_departamento = pedir_id("INGRESE LA ID DEL DEPARTAMENTO: ")
     if id_departamento is None:
         return
@@ -80,13 +94,14 @@ def buscar_departamento():
             print("Departamento encontrado:")
             print(departamento.mostrar_datos())
         else:
-            print("No se encontró el departamento")
+            print("No se encontró el departamento.")
     except Exception as e:
         print(f"Error al buscar el departamento: {e}")
 
 
 def actualizar_departamento():
-    listar_departamentos()
+    if not listar_departamentos():
+        return
     id_departamento = pedir_id("Ingrese la ID del departamento: ")
     if id_departamento is None:
         return
@@ -94,6 +109,9 @@ def actualizar_departamento():
     nombre_nuevo = input("Nombre nuevo: ").strip()
     if not nombre_nuevo:
         print("El nombre no puede estar vacío.")
+        return
+    if not nombre_valido(nombre_nuevo):
+        print("El nombre solo puede contener letras y espacios.")
         return
 
     try:
@@ -109,14 +127,12 @@ def actualizar_departamento():
 
 
 def eliminar_departamento():
-    listar_departamentos()
+    if not listar_departamentos():
+        return
     print("Eliminar departamento")
     id_departamento = pedir_id("Ingrese la ID del departamento: ")
     if id_departamento is None:
         return
-    
-    
-
 
     try:
         eliminado = DepartamentoDAO.eliminar(id_departamento)

@@ -40,21 +40,48 @@ def pedir_id(mensaje: str):
         return None
 
 
+def nombre_valido(nombre: str) -> bool:
+    for caracter in nombre:
+        if not (caracter.isalnum() or caracter == " "):
+            return False
+    return True
+
+
+def fecha_valida(fecha: str) -> bool:
+    partes = fecha.split("-")
+    if len(partes) != 3:
+        return False
+    if not (partes[0].isdigit() and partes[1].isdigit() and partes[2].isdigit()):
+        return False
+    if len(partes[0]) != 4 or len(partes[1]) != 2 or len(partes[2]) != 2:
+        return False
+    if int(partes[1]) < 1 or int(partes[1]) > 12:
+        return False
+    if int(partes[2]) < 1 or int(partes[2]) > 31:
+        return False
+    return True
+
+
 def registrar_proyecto():
     nombre = input("Nombre: ").strip()
-    fecha_inicio = input("Fecha de inicio (AAAA-MM-DD): ").strip()
-
-    if not nombre:
+    if nombre == "":
         print("El nombre no puede estar vacío.")
         return
+    if not nombre_valido(nombre):
+        print("El nombre solo puede tener letras, números y espacios.")
+        return
 
-    if not fecha_inicio:
+    fecha_inicio = input("Fecha de inicio (AAAA-MM-DD, Enter para omitir): ").strip()
+    if fecha_inicio == "":
         fecha_inicio = None
+    elif not fecha_valida(fecha_inicio):
+        print("Fecha no válida. Usa el formato AAAA-MM-DD.")
+        return
 
     proyecto = Proyecto(nombre, fecha_inicio=fecha_inicio)
     try:
         ProyectoDAO.insertar(proyecto)
-        print(f"Proyecto registrado correctamente. ID: {proyecto.id}")
+        print(f"Proyecto registrado correctamente. ID: {proyecto.id()}")
     except Exception as e:
         print(f"No fue posible registrar el proyecto: {e}")
 
@@ -65,16 +92,19 @@ def listar_proyectos():
         proyectos = ProyectoDAO.listar()
         if not proyectos:
             print("No hay proyectos registrados.")
-            return
+            return False
         for item in proyectos:
             print(item.mostrar_datos())
+        return True
     except Exception as e:
         print(f"Error al listar los proyectos: {e}")
+        return False
 
 
 def buscar_proyecto():
-    listar_proyectos()
-    id_proyecto = pedir_id("INGRESE LA ID DEL PROYECTO:")
+    if not listar_proyectos():
+        return
+    id_proyecto = pedir_id("INGRESE LA ID DEL PROYECTO: ")
     if id_proyecto is None:
         return
 
@@ -84,26 +114,32 @@ def buscar_proyecto():
             print("Proyecto encontrado:")
             print(encontrado.mostrar_datos())
         else:
-            print("No se encontró el proyecto")
+            print("No se encontró el proyecto.")
     except Exception as e:
         print(f"Error al buscar el proyecto: {e}")
 
 
 def actualizar_proyecto():
-    listar_proyectos()
+    if not listar_proyectos():
+        return
     id_proyecto = pedir_id("INGRESE LA ID DEL PROYECTO: ")
     if id_proyecto is None:
         return
 
     nombre_nuevo = input("Nombre nuevo: ").strip()
-    fecha_nueva = input("Fecha de inicio nueva (AAAA-MM-DD): ").strip()
-
-    if not nombre_nuevo:
+    if nombre_nuevo == "":
         print("El nombre no puede estar vacío.")
         return
+    if not nombre_valido(nombre_nuevo):
+        print("El nombre solo puede tener letras, números y espacios.")
+        return
 
-    if not fecha_nueva:
+    fecha_nueva = input("Fecha de inicio nueva (AAAA-MM-DD, Enter para omitir): ").strip()
+    if fecha_nueva == "":
         fecha_nueva = None
+    elif not fecha_valida(fecha_nueva):
+        print("Fecha no válida. Usa el formato AAAA-MM-DD.")
+        return
 
     try:
         actualizado = ProyectoDAO.actualizar(
@@ -118,7 +154,8 @@ def actualizar_proyecto():
 
 
 def eliminar_proyecto():
-    listar_proyectos()
+    if not listar_proyectos():
+        return
     print("Eliminar proyecto")
     id_proyecto = pedir_id("INGRESE LA ID DEL PROYECTO: ")
     if id_proyecto is None:
