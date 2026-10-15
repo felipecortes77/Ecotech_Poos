@@ -11,10 +11,10 @@ class ProyectoDAO:
             cursor = conexion.cursor()
             marca = marcador_sql()
             sql = f"""
-                INSERT INTO proyecto (nombre, fecha_inicio)
-                VALUES ({marca}, {marca})
+                INSERT INTO proyecto (nombre, descripcion, fecha_inicio, fecha_fin, estado)
+                VALUES ({marca}, {marca},{marca}, {marca},{marca})
             """
-            cursor.execute(sql, (proyecto.nombre, proyecto.fecha_inicio))
+            cursor.execute(sql, (proyecto.nombre, proyecto.descripcion, proyecto.fecha_inicio, proyecto.fecha_fin, proyecto.estado))
             proyecto.id = cursor.lastrowid
             conexion.commit()
             return proyecto
@@ -31,7 +31,10 @@ class ProyectoDAO:
         return Proyecto(
             id=fila[0],
             nombre=fila[1],
-            fecha_inicio=fila[2]
+            descripcion=fila[2],
+            fecha_inicio=fila[3],
+            fecha_fin=fila[4],
+            estado=fila[5]
         )
 
     @staticmethod
@@ -42,7 +45,7 @@ class ProyectoDAO:
             cursor = conexion.cursor()
             marca = marcador_sql()
             sql = f"""
-                SELECT id, nombre, fecha_inicio
+                SELECT id, nombre, descripcion, fecha_inicio, fecha_fin, estado
                 FROM proyecto WHERE id = {marca}
             """
             cursor.execute(sql, (id_proyecto,))
@@ -62,7 +65,7 @@ class ProyectoDAO:
             cursor = conexion.cursor()
             marca = marcador_sql()
             sql = f"""
-                SELECT id, nombre, fecha_inicio
+                SELECT id, nombre, descripcion, fecha_inicio, fecha_fin, estado
                 FROM proyecto WHERE nombre LIKE {marca}
             """
             cursor.execute(sql, (f"%{nombre_proyecto}%",))
@@ -81,7 +84,7 @@ class ProyectoDAO:
         try:
             conexion = abrir_conexion()
             cursor = conexion.cursor()
-            cursor.execute("SELECT id, nombre, fecha_inicio FROM proyecto")
+            cursor.execute("SELECT id, nombre, descripcion, fecha_inicio, fecha_fin, estado FROM proyecto")
             filas = cursor.fetchall()
             proyectos = []
             for fila in filas:

@@ -1,10 +1,12 @@
 class RegistroTiempo:
-    def __init__(self, fecha: str, horas: float, id_empleado: int = None, id_proyecto: int = None, id: int = None):
+    def __init__(self, id_empleado: int, id_proyecto: int, fecha: str, horas: float, descripcion: str, id: int = None):
         self._id = id
-        self._fecha = fecha
-        self._horas = horas
         self._id_empleado = id_empleado
         self._id_proyecto = id_proyecto
+        self._fecha = fecha
+        self._horas = horas
+        self._descripcion = descripcion
+        
 
     @property
     def id(self):
@@ -21,6 +23,14 @@ class RegistroTiempo:
     @fecha.setter
     def fecha(self, valor):
         self._fecha = valor
+
+    @property
+    def descripcion(self):
+        return self._descripcion
+    
+    @descripcion.setter
+    def descripcion(self,valor):
+        self._descripcion = valor
 
     @property
     def horas(self):
@@ -47,4 +57,4 @@ class RegistroTiempo:
         self._id_proyecto = valor
 
     def mostrar_horas(self) -> str:
-        return f"Registro #{self.id} -> {self.horas} horas trabajadas el {self.fecha} (Empleado: {self.id_empleado}, Proyecto: {self.id_proyecto})"
+        return f"Registro #{self.id}: {self.horas} horas trabajadas el {self.fecha} (Empleado: {self.id_empleado}, Proyecto: {self.id_proyecto}). Descripción: {self.descripcion}"

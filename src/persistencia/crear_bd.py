@@ -11,7 +11,9 @@ def crear_tablas():
             sql_departamento = '''
                 CREATE TABLE IF NOT EXISTS departamento (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                nombre TEXT NOT NULL
+                nombre TEXT NOT NULL,
+                descripcion TEXT NOT NULL DEFAULT '',
+                gerente TEXT
                 )
             '''
             sql_proyecto = '''
@@ -45,14 +47,19 @@ def crear_tablas():
             sql_departamento = '''
                 CREATE TABLE IF NOT EXISTS departamento (
                 id INT PRIMARY KEY AUTO_INCREMENT,
-                nombre VARCHAR(100) NOT NULL
+                nombre VARCHAR(100) NOT NULL,
+                descripcion varchar(100) NOT NULL,
+                gerente VARCHAR(100)
                 )
             '''
             sql_proyecto = '''
                 CREATE TABLE IF NOT EXISTS proyecto (
                 id INT PRIMARY KEY AUTO_INCREMENT,
                 nombre VARCHAR(100) NOT NULL,
-                fecha_inicio VARCHAR(20)
+                descripcion VARCHAR(100) NOT NULL,
+                fecha_inicio DATE NOT NULL,
+                fecha_fin DATE,
+                estado VARCHAR(20) NOT NULL
                 )
             '''
             sql_empleado = '''
@@ -80,6 +87,32 @@ def crear_tablas():
         cursor.execute(sql_proyecto)
         cursor.execute(sql_empleado)
         cursor.execute(sql_registro)
+
+        if obtener_motor() == "sqlite":
+            cursor.execute("PRAGMA table_info(departamento)")
+            columnas = {fila[1] for fila in cursor.fetchall()}
+            if "descripcion" not in columnas:
+                cursor.execute(
+                    "ALTER TABLE departamento "
+                    "ADD COLUMN descripcion TEXT NOT NULL DEFAULT ''"
+                )
+            if "gerente" not in columnas:
+                cursor.execute(
+                    "ALTER TABLE departamento ADD COLUMN gerente TEXT"
+                )
+        else:
+            cursor.execute("SHOW COLUMNS FROM departamento")
+            columnas = {fila[0] for fila in cursor.fetchall()}
+            if "descripcion" not in columnas:
+                cursor.execute(
+                    "ALTER TABLE departamento "
+                    "ADD COLUMN descripcion VARCHAR(100) NOT NULL DEFAULT ''"
+                )
+            if "gerente" not in columnas:
+                cursor.execute(
+                    "ALTER TABLE departamento ADD COLUMN gerente VARCHAR(100)"
+                )
+
         conexion.commit()
 
     except Exception:

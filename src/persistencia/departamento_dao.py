@@ -11,10 +11,17 @@ class DepartamentoDAO:
             cursor = conexion.cursor()
             marca = marcador_sql()
             sql = f"""
-                INSERT INTO departamento (nombre)
-                VALUES ({marca})
+                INSERT INTO departamento (nombre, descripcion, gerente)
+                VALUES ({marca}, {marca}, {marca})
             """
-            cursor.execute(sql, (departamento.nombre,))
+            cursor.execute(
+                sql,
+                (
+                    departamento.nombre,
+                    departamento.descripcion,
+                    departamento.gerente
+                )
+            )
             departamento.id = cursor.lastrowid
             conexion.commit()
             return departamento
@@ -30,7 +37,9 @@ class DepartamentoDAO:
     def _fila_a_departamento(fila):
         return Departamento(
             id=fila[0],
-            nombre=fila[1]
+            nombre=fila[1],
+            descripcion=fila[2],
+            gerente=fila[3]
         )
 
     @staticmethod
@@ -41,7 +50,7 @@ class DepartamentoDAO:
             cursor = conexion.cursor()
             marca = marcador_sql()
             sql = f"""
-                SELECT id, nombre
+                SELECT id, nombre, descripcion, gerente
                 FROM departamento WHERE id = {marca}
             """
             cursor.execute(sql, (id_departamento,))
@@ -59,7 +68,9 @@ class DepartamentoDAO:
         try:
             conexion = abrir_conexion()
             cursor = conexion.cursor()
-            cursor.execute("SELECT id, nombre FROM departamento")
+            cursor.execute(
+                "SELECT id, nombre, descripcion, gerente FROM departamento"
+            )
             filas = cursor.fetchall()
             departamentos = []
             for fila in filas:

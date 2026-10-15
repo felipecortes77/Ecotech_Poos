@@ -1,6 +1,6 @@
 from dominio.proyecto import Proyecto
 from persistencia.proyecto_dao import ProyectoDAO
-
+from datetime import datetime
 
 def menu_proyecto():
     opcion = ""
@@ -63,22 +63,53 @@ def fecha_valida(fecha: str) -> bool:
 
 
 def registrar_proyecto():
-    nombre = input("Nombre: ").strip()
-    if nombre == "":
-        print("El nombre no puede estar vacío.")
-        return
-    if not nombre_valido(nombre):
-        print("El nombre solo puede tener letras, números y espacios.")
-        return
+    while True:
+        nombre = input("Nombre: ").strip()
+        if nombre == "":
+            print("El nombre no puede estar vacío.")
+            return
+        if not nombre_valido(nombre):
+            print("El nombre solo puede tener letras, números y espacios.")
+            return
+        else:
+            break
 
-    fecha_inicio = input("Fecha de inicio (AAAA-MM-DD, Enter para omitir): ").strip()
-    if fecha_inicio == "":
-        fecha_inicio = None
-    elif not fecha_valida(fecha_inicio):
-        print("Fecha no válida. Usa el formato AAAA-MM-DD.")
-        return
+    while True:
+        descripcion = input("Descripcion: ").strip()
+        if descripcion == "":
+            print("La descripcion no puede estar vacia.")
+            return
+        if not nombre_valido(descripcion):
+            print("La descripcion solo puede tener letras, números y espacios.")
+            return
+        else:
+            break
+        
+    while True:
+        fecha_inicio_str = input("Fecha de inicio (AAAA-MM-DD): ").strip()
+        
+        if not fecha_inicio_str:
+            print("La fecha de inicio no puede estar vacía.")
+            continue
+            
+        try:
+            fecha_inicio = datetime.strptime(fecha_inicio_str, "%Y-%m-%d").date()
+            break
+        except ValueError:
+            print("Formato incorrecto. Por favor, usa el formato AAAA-MM-DD (ej: 2026-10-15).")
 
-    proyecto = Proyecto(nombre, fecha_inicio=fecha_inicio)
+    fecha_fin = input("Fecha de Fin (AAAA-MM-DD, Enter para omitir): ").strip()
+    if fecha_fin == "":
+        fecha_fin = None
+
+    while True:
+        estado = input("Estado del proyecto: ").strip()
+        if not estado.isalpha():
+            print("El estado solo puede contener palabras.")
+        else:
+            break
+    
+    proyecto = Proyecto(nombre, descripcion, fecha_inicio, fecha_fin, estado)
     try:
         ProyectoDAO.insertar(proyecto)
         print(f"Proyecto registrado correctamente. ID: {proyecto.id()}")
