@@ -4,8 +4,19 @@ from presentacion.menu_empleado import menu_empleados
 from presentacion.menu_proyecto import menu_proyecto
 from presentacion.menu_registrotiempo import menu_registro_tiempo
 from persistencia.semilla_bd import cargar_departamentos, cargar_empleados
-
-
+from menu_usuario import solicitar_login, menu_privado
+def main():
+    while True:
+        usuario_actual = solicitar_login()
+        if usuario_actual is None:
+            if input("Enter para reintentar o 0 para salir: ") == "0":
+                return
+            continue
+        opcion = menu_privado(usuario_actual)
+        usuario_actual = None # Terminar el acceso de esta sesión.
+        if opcion == "0":
+            return
+        print("Sesión cerrada. Ingrese nuevamente.")
 
 def menu_principal():
     opcion = ""

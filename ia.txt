@@ -1,5 +1,7 @@
 Se ocupo copilot para el autocompletado y agregar a crear_db los cambios hechos en los dominios
 
+Se uso copilot para generar usuario_dao usando como base empleado_dao
+
 Gemini para generar los 20 nombres y apellidos
 
 La concentración de IA se enfoco más en persistencia

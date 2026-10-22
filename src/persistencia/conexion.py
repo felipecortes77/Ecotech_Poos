@@ -19,7 +19,9 @@ def marcador_sql():
 def abrir_conexion():
     motor = obtener_motor()
     if motor == "sqlite":
-        return sqlite3.connect(os.getenv("DB_NAME", "ecotech.db"))
+        conexion = sqlite3.connect(os.getenv("DB_NAME", "ecotech.db"))
+        conexion.execute("PRAGMA foreign_keys = ON")
+        return conexion
 
     if motor == "mysql":
         return pymysql.connect(

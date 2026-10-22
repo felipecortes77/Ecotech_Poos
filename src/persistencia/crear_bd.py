@@ -43,6 +43,15 @@ def crear_tablas():
                 FOREIGN KEY (id_proyecto) REFERENCES proyecto(id)
                 )
             '''
+            sql_usuario = '''
+                CREATE TABLE IF NOT EXISTS usuario (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                nombre_usuario TEXT NOT NULL UNIQUE,
+                password_hash TEXT NOT NULL,
+                id_empleado INTEGER NOT NULL UNIQUE,
+                FOREIGN KEY (id_empleado) REFERENCES empleado(id)
+                )
+            '''
         else:
             sql_departamento = '''
                 CREATE TABLE IF NOT EXISTS departamento (
@@ -82,10 +91,20 @@ def crear_tablas():
                 FOREIGN KEY (id_proyecto) REFERENCES proyecto(id)
                 )
             '''
+            sql_usuario = '''
+                CREATE TABLE IF NOT EXISTS usuario (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                nombre_usuario VARCHAR(40) NOT NULL UNIQUE,
+                password_hash VARCHAR(255) NOT NULL,
+                id_empleado INT NOT NULL UNIQUE,
+                FOREIGN KEY (id_empleado) REFERENCES empleado(id)
+                )
+            '''
 
         cursor.execute(sql_departamento)
         cursor.execute(sql_proyecto)
         cursor.execute(sql_empleado)
+        cursor.execute(sql_usuario)
         cursor.execute(sql_registro)
 
         if obtener_motor() == "sqlite":
