@@ -1,8 +1,6 @@
 from dominio.empleado import Empleado
 from persistencia.departamento_dao import DepartamentoDAO
 from persistencia.empleado_dao import EmpleadoDAO
-from presentacion.menu_departamento import listar_departamentos
-from persistencia.departamento_dao import DepartamentoDAO
 
 
 
@@ -67,6 +65,33 @@ def mostrar_departamentos():
         print(f"Error al listar los departamentos: {e}")
         return False
 
+
+def seleccionar_departamento(id_actual=None):
+    if not mostrar_departamentos():
+        return id_actual, True
+
+    if id_actual is None:
+        mensaje = "ID del departamento (Enter para omitir): "
+    else:
+        mensaje = "ID del departamento (Enter conserva, 0 quita): "
+    texto = input(mensaje).strip()
+    if not texto:
+        return id_actual, True
+    if texto == "0":
+        return None, True
+
+    try:
+        id_departamento = int(texto)
+    except ValueError:
+        print("La ID debe ser un número.")
+        return id_actual, False
+
+    if DepartamentoDAO.buscar_por_id(id_departamento) is None:
+        print("No existe un departamento con esa ID.")
+        return id_actual, False
+    return id_departamento, True
+
+
 def registrar_empleado():
     nombre = input("Nombre: ").strip()
     correo = input("Correo: ").strip()
@@ -75,25 +100,14 @@ def registrar_empleado():
         print("El nombre y el correo no pueden estar vacíos.")
         return
 
-    id_departamento = None
-    if mostrar_departamentos():
-        texto = input("ID del departamento (Enter para omitir): ").strip()
-        if texto:
-            try:
-                id_departamento = int(texto)
-            except ValueError:
-                print("La ID debe ser un número.")
-                return
-
     try:
-        if id_departamento is not None:
-            if DepartamentoDAO.buscar_por_id(id_departamento) is None:
-                print("No existe un departamento con esa ID.")
-                return
+        id_departamento, valido = seleccionar_departamento()
+        if not valido:
+            return
 
         empleado = Empleado(nombre, correo, id_departamento=id_departamento)
         EmpleadoDAO.insertar(empleado)
-        print(f"Empleado registrado correctamente. ID: {empleado.id()}")
+        print(f"Empleado registrado correctamente. ID: {empleado.id}")
     except Exception as e:
         print(f"No fue posible registrar el empleado: {e}")
 
@@ -149,6 +163,12 @@ def actualizar_empleado():
 
         empleado.nombre = nombre_nuevo
         empleado.correo = correo_nuevo
+        id_departamento, valido = seleccionar_departamento(
+            empleado.id_departamento
+        )
+        if not valido:
+            return
+        empleado.id_departamento = id_departamento
 
         if EmpleadoDAO.actualizar(empleado):
             print("Empleado actualizado correctamente.")

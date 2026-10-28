@@ -89,10 +89,19 @@ class DepartamentoDAO:
             marca = marcador_sql()
             sql = (
                 "UPDATE departamento "
-                f"SET nombre = {marca} "
+                f"SET nombre = {marca}, descripcion = {marca}, "
+                f"gerente = {marca} "
                 f"WHERE id = {marca}"
             )
-            cursor.execute(sql, (departamento.nombre, departamento.id))
+            cursor.execute(
+                sql,
+                (
+                    departamento.nombre,
+                    departamento.descripcion,
+                    departamento.gerente,
+                    departamento.id
+                )
+            )
             conexion.commit()
             return cursor.rowcount > 0
         except Exception:

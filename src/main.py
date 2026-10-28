@@ -3,20 +3,34 @@ from presentacion.menu_departamento import menu_departamento
 from presentacion.menu_empleado import menu_empleados
 from presentacion.menu_proyecto import menu_proyecto
 from presentacion.menu_registrotiempo import menu_registro_tiempo
-from persistencia.semilla_bd import cargar_departamentos, cargar_empleados
-from menu_usuario import solicitar_login, menu_privado
+from persistencia.semilla_bd import (
+    cargar_departamentos,
+    cargar_empleados,
+    cargar_gerentes,
+    cargar_usuario_admin,
+)
+from menu_usuario import solicitar_login
+
+
 def main():
+    try:
+        crear_tablas()
+        cargar_departamentos()
+        cargar_empleados()
+        cargar_gerentes()
+        cargar_usuario_admin()
+    except Exception as e:
+        print(f"No se pudo preparar la base de datos: {e}")
+        return
+
     while True:
         usuario_actual = solicitar_login()
         if usuario_actual is None:
             if input("Enter para reintentar o 0 para salir: ") == "0":
                 return
             continue
-        opcion = menu_privado(usuario_actual)
-        usuario_actual = None # Terminar el acceso de esta sesión.
-        if opcion == "0":
-            return
-        print("Sesión cerrada. Ingrese nuevamente.")
+        menu_principal()
+        return
 
 def menu_principal():
     opcion = ""
@@ -47,12 +61,4 @@ def menu_principal():
 if __name__ == "__main__":
     from persistencia.conexion import obtener_motor
     print("Motor:", obtener_motor())
-
-    try:
-        crear_tablas()
-        cargar_departamentos()
-        cargar_empleados()
-    except Exception as e:
-        print(f"No se pudo preparar la base de datos: {e}")
-    
-    menu_principal()
+    main()

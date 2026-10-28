@@ -15,7 +15,7 @@ def crear_hash(clave):
 
 def registrar_usuario(empleado_id, nombre, clave):
     nombre = Usuario.normalizar_usuario(nombre)
-    if UsuarioDAO.buscar_por_nombre(nombre) is not None:
+    if UsuarioDAO.buscar_por_nombre_usuario(nombre) is not None:
         raise ValueError("No se pudo crear esa cuenta.")
 
     hash_guardado = crear_hash(clave)
@@ -30,7 +30,7 @@ def autenticar(nombre, clave):
     datos = clave.encode("utf-8")
     if not 0 < len(datos) <= MAX_BYTES_BCRYPT:
         return None
-    cuenta = UsuarioDAO.buscar_por_nombre(nombre)
+    cuenta = UsuarioDAO.buscar_por_nombre_usuario(nombre)
     
     if cuenta is None:
         print(f"No se encontró la cuenta para el usuario: {nombre}")

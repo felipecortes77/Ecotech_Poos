@@ -2,6 +2,12 @@ from dominio.departamento import Departamento
 from dominio.empleado import Empleado
 from persistencia.departamento_dao import DepartamentoDAO
 from persistencia.empleado_dao import EmpleadoDAO
+from persistencia.usuario_dao import UsuarioDAO
+from servicios.autenticacion import registrar_usuario
+
+ADMIN_NOMBRE_USUARIO = "admin"
+ADMIN_CLAVE = "admin123"
+ADMIN_CORREO = "admin@ecotech.cl"
 
 
 def cargar_departamentos():
@@ -86,3 +92,67 @@ def cargar_empleados(departamento_demo=None):
         )
         EmpleadoDAO.insertar(empleado)
         print(f"Creado: {correo}")
+
+
+def cargar_usuario_admin():
+    if UsuarioDAO.buscar_por_nombre_usuario(ADMIN_NOMBRE_USUARIO) is not None:
+        return
+
+    empleado = EmpleadoDAO.buscar_por_correo(ADMIN_CORREO)
+    if empleado is None:
+        departamento = next(
+            (
+                item for item in DepartamentoDAO.listar()
+                if item.nombre == "Desarrollo"
+            ),
+            None
+        )
+        if departamento is None:
+            raise ValueError(
+                "Debe cargar el departamento 'Desarrollo' antes del admin."
+            )
+        empleado = Empleado(
+            "Administrador EcoTech",
+            ADMIN_CORREO,
+            id_departamento=departamento.id
+        )
+        EmpleadoDAO.insertar(empleado)
+
+    if UsuarioDAO.buscar_por_empleado(empleado.id) is not None:
+        raise ValueError(
+            "El empleado admin ya tiene una cuenta asociada."
+        )
+
+    registrar_usuario(empleado.id, ADMIN_NOMBRE_USUARIO, ADMIN_CLAVE)
+    print(f"Cuenta admin creada: {ADMIN_NOMBRE_USUARIO}")
+
+
+def cargar_gerentes():
+    asignaciones = {
+        "Desarrollo": "juan.perez@ecotech.cl",
+        "Recursos Humanos": "maria.gonzalez@ecotech.cl",
+        "Operaciones": "carlos.silva@ecotech.cl",
+        "Finanzas": "ana.rodriguez@ecotech.cl",
+        "Ventas": "jose.munoz@ecotech.cl",
+    }
+    empleados = {
+        correo: EmpleadoDAO.buscar_por_correo(correo)
+        for correo in asignaciones.values()
+    }
+    departamentos = {
+        departamento.nombre: departamento
+        for departamento in DepartamentoDAO.listar()
+    }
+
+    for nombre_departamento, correo_gerente in asignaciones.items():
+        departamento = departamentos.get(nombre_departamento)
+        empleado = empleados[correo_gerente]
+        if departamento is None or empleado is None:
+            raise ValueError(
+                f"Falta el departamento o empleado gerente para "
+                f"'{nombre_departamento}'."
+            )
+        if departamento.gerente:
+            continue
+        departamento.gerente = empleado.nombre
+        DepartamentoDAO.actualizar(departamento)

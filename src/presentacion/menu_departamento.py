@@ -1,5 +1,6 @@
 from persistencia.departamento_dao import DepartamentoDAO
 from dominio.departamento import Departamento
+from persistencia.empleado_dao import EmpleadoDAO
 
 
 def menu_departamento():
@@ -49,6 +50,40 @@ def nombre_valido(nombre: str) -> bool:
     return True
 
 
+def seleccionar_gerente(gerente_actual=None):
+    empleados = EmpleadoDAO.listar()
+    if not empleados:
+        print("No hay empleados disponibles para asignar como gerente.")
+        return gerente_actual
+
+    print("Empleados disponibles para gerente:")
+    for empleado in empleados:
+        print(empleado.mostrar_datos())
+
+    texto = input(
+        "ID del gerente (Enter para conservar/omitir, 0 para quitar): "
+    ).strip()
+    if not texto:
+        return gerente_actual
+    if texto == "0":
+        return None
+
+    try:
+        id_empleado = int(texto)
+    except ValueError:
+        print("La ID debe ser un número.")
+        return gerente_actual
+
+    empleado = next(
+        (item for item in empleados if item.id == id_empleado),
+        None
+    )
+    if empleado is None:
+        print("No existe un empleado con esa ID.")
+        return gerente_actual
+    return empleado.nombre
+
+
 def registrar_departamento():
     nombre = input("Nombre: ").strip()
     if not nombre:
@@ -58,10 +93,11 @@ def registrar_departamento():
         print("El nombre solo puede contener letras y espacios.")
         return
 
-    departamento = Departamento(nombre)
     try:
+        gerente = seleccionar_gerente()
+        departamento = Departamento(nombre, gerente=gerente)
         DepartamentoDAO.insertar(departamento)
-        print(f"Departamento registrado correctamente. ID: {departamento.id()}")
+        print(f"Departamento registrado correctamente. ID: {departamento.id}")
     except Exception as e:
         print(f"No fue posible registrar el departamento: {e}")
 
@@ -106,6 +142,11 @@ def actualizar_departamento():
     if id_departamento is None:
         return
 
+    departamento_actual = DepartamentoDAO.buscar_por_id(id_departamento)
+    if departamento_actual is None:
+        print("No se encontró el departamento.")
+        return
+
     nombre_nuevo = input("Nombre nuevo: ").strip()
     if not nombre_nuevo:
         print("El nombre no puede estar vacío.")
@@ -115,8 +156,14 @@ def actualizar_departamento():
         return
 
     try:
+        gerente = seleccionar_gerente(departamento_actual.gerente)
         actualizado = DepartamentoDAO.actualizar(
-            Departamento(id=id_departamento, nombre=nombre_nuevo)
+            Departamento(
+                id=id_departamento,
+                nombre=nombre_nuevo,
+                descripcion=departamento_actual.descripcion,
+                gerente=gerente
+            )
         )
         if actualizado:
             print("Departamento actualizado correctamente.")

@@ -1,6 +1,5 @@
-Se ocupo copilot para el autocompletado y agregar a crear_db los cambios hechos en los dominios
-
-Se uso copilot para generar usuario_dao usando como base empleado_dao
+Se ocupo copilot para el autocompletado y agregar a crear_db los cambios hechos en los dominios ademas generar usuario_dao usando como base empleado_dao y mejorar la semilla,
+tambien para conectar la funcion main en main.py y conectarla con menu_principal si es exitosa y arreglar fallos en los menus
 
 Gemini para generar los 20 nombres y apellidos
 
