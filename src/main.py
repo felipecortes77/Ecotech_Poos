@@ -3,6 +3,7 @@ from presentacion.menu_departamento import menu_departamento
 from presentacion.menu_empleado import menu_empleados
 from presentacion.menu_proyecto import menu_proyecto
 from presentacion.menu_registrotiempo import menu_registro_tiempo
+from presentacion.menu_usuario import menu_usuarios
 from persistencia.semilla_bd import (
     cargar_departamentos,
     cargar_empleados,
@@ -40,7 +41,8 @@ def menu_principal():
         print("2. Empleados")
         print("3. Proyectos")
         print("4. Registro de tiempo")
-        print("0. Salir")
+        print("5. Usuarios")
+        print("0. Cerrar Sesion")
 
         opcion = input("Seleccione una opción: ").strip()
 
@@ -52,8 +54,11 @@ def menu_principal():
             menu_proyecto()
         elif opcion == "4":
             menu_registro_tiempo()
+        elif opcion == "5":
+            menu_usuarios()
         elif opcion == "0":
             print("Hasta luego.")
+            main()
         else:
             print("Opción no válida.")
 

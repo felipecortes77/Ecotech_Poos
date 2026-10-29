@@ -32,3 +32,6 @@ class Usuario:
                 f"Use al menos {cls.MIN_CLAVE} caracteres."
             )
         return clave # Sin strip, lower ni truncado.
+
+    def mostrar_datos(self):
+        print(f"ID: {self.id} - {self.nombre_usuario}")

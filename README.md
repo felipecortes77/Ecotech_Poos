@@ -37,7 +37,7 @@ deactivate
 
 Sin configuracion adicional se usa SQLite y se crea `ecotech.db` en la carpeta desde la que se ejecuta la aplicacion. Al iniciar, la aplicacion crea la tabla de empleados si no existe.
 
-Para configurar valores propios, copia `src/.env.example` como `src/.env` y edita sus variables. El motor predeterminado es SQLite (`DB_ENGINE=sqlite`). Para usar MySQL, configura `DB_ENGINE=mysql`, `DB_NAME`, `DB_HOST`, `DB_PORT`, `DB_USER` y `DB_PASSWORD`; la base de datos debe existir previamente. No publiques `src/.env` ni credenciales reales.
+Para configurar valores propios, copia `.env.example` como `.env` y edita sus variables. El motor predeterminado es SQLite (`DB_ENGINE=sqlite`). Para usar MySQL, configura `DB_ENGINE=mysql`, `DB_NAME`, `DB_HOST`, `DB_PORT`, `DB_USER` y `DB_PASSWORD`; la base de datos debe existir previamente. No publiques `.env` ni credenciales reales.
 
 ## Ejecutar
 
