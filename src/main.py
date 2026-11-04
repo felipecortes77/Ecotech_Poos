@@ -3,14 +3,14 @@ from presentacion.menu_departamento import menu_departamento
 from presentacion.menu_empleado import menu_empleados
 from presentacion.menu_proyecto import menu_proyecto
 from presentacion.menu_registrotiempo import menu_registro_tiempo
-from presentacion.menu_usuario import menu_usuarios
+from presentacion.menu_usuario_mod import menu_usuarios
 from persistencia.semilla_bd import (
     cargar_departamentos,
     cargar_empleados,
     cargar_gerentes,
     cargar_usuario_admin,
 )
-from menu_usuario import solicitar_login
+from presentacion.menu_usuario import solicitar_login
 
 
 def main():
@@ -30,8 +30,19 @@ def main():
             if input("Enter para reintentar o 0 para salir: ") == "0":
                 return
             continue
-        menu_principal()
+
+        if usuario_actual["rol"] == "admin":
+            menu_admin()
+        else:
+            menu_empleado()
         return
+
+
+def menu_admin():
+    print("ADMIN")
+
+def menu_empleado():
+    print("EMPLEADO")
 
 def menu_principal():
     opcion = ""

@@ -123,8 +123,9 @@ def cargar_usuario_admin():
             "El empleado admin ya tiene una cuenta asociada."
         )
 
-    registrar_usuario(empleado.id, ADMIN_NOMBRE_USUARIO, ADMIN_CLAVE)
+    registrar_usuario(empleado.id, ADMIN_NOMBRE_USUARIO, ADMIN_CLAVE, "admin")
     print(f"Cuenta admin creada: {ADMIN_NOMBRE_USUARIO}")
+
 
 
 def cargar_gerentes():

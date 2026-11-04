@@ -2,14 +2,16 @@ class Usuario:
     MIN_USUARIO = 3
     MAX_USUARIO = 40
     MIN_CLAVE = 6
-    
-    def __init__(self, nombre_usuario, password_hash, empleado_id, id=None):
+    ROLES = ("admin", "empleado")
+
+    def __init__(self, nombre_usuario, password_hash, empleado_id, rol = "empleado", id=None):
         if type(empleado_id) is not int or empleado_id <= 0:
             raise ValueError("El ID del empleado debe ser positivo.")
         self.id = id
         self.empleado_id = empleado_id
         self.nombre_usuario = self.normalizar_usuario(nombre_usuario)
         self.password_hash = password_hash
+        self.rol = self.validar_rol(rol)
 
     @classmethod
     def normalizar_usuario(cls, nombre):
@@ -32,6 +34,13 @@ class Usuario:
                 f"Use al menos {cls.MIN_CLAVE} caracteres."
             )
         return clave # Sin strip, lower ni truncado.
+
+    @classmethod
+    def validar_rol(cls, rol):
+        if not isinstance(rol, str) or rol not in cls.ROLES:
+            raise ValueError("Rol no permitido.")
+        return rol
+
 
     def mostrar_datos(self):
         print(f"ID: {self.id} - {self.nombre_usuario}")

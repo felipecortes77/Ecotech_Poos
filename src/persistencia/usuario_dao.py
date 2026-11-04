@@ -11,15 +11,16 @@ class UsuarioDAO:
             cursor = conexion.cursor()
             marca = marcador_sql()
             sql = f"""
-                INSERT INTO usuario (nombre_usuario, password_hash, id_empleado)
-                VALUES ({marca}, {marca}, {marca})
+                INSERT INTO usuario (nombre_usuario, password_hash, id_empleado, rol)
+                VALUES ({marca}, {marca}, {marca}, {marca})
             """
             cursor.execute(
                 sql,
                 (
                     usuario.nombre_usuario,
                     usuario.password_hash,
-                    usuario.empleado_id
+                    usuario.empleado_id,
+                    usuario.rol
                 )
             )
             usuario.id = cursor.lastrowid
@@ -39,6 +40,7 @@ class UsuarioDAO:
             nombre_usuario=fila[1],
             password_hash=fila[2],
             empleado_id=fila[3],
+            rol=fila[4],
             id=fila[0]
         )
 
@@ -50,7 +52,7 @@ class UsuarioDAO:
             cursor = conexion.cursor()
             marca = marcador_sql()
             sql = f"""
-                SELECT id, nombre_usuario, password_hash, id_empleado
+                SELECT id, nombre_usuario, password_hash, id_empleado, rol
                 FROM usuario WHERE id = {marca}
             """
             cursor.execute(sql, (id_usuario,))
@@ -70,7 +72,7 @@ class UsuarioDAO:
             cursor = conexion.cursor()
             marca = marcador_sql()
             sql = f"""
-                SELECT id, nombre_usuario, password_hash, id_empleado
+                SELECT id, nombre_usuario, password_hash, id_empleado, rol
                 FROM usuario WHERE nombre_usuario = {marca}
             """
             cursor.execute(sql, (nombre_usuario,))
@@ -90,7 +92,7 @@ class UsuarioDAO:
             cursor = conexion.cursor()
             marca = marcador_sql()
             sql = f"""
-                SELECT id, nombre_usuario, password_hash, id_empleado
+                SELECT id, nombre_usuario, password_hash, id_empleado, rol
                 FROM usuario WHERE id_empleado = {marca}
             """
             cursor.execute(sql, (id_empleado,))
@@ -109,7 +111,7 @@ class UsuarioDAO:
             conexion = abrir_conexion()
             cursor = conexion.cursor()
             cursor.execute(
-                "SELECT id, nombre_usuario, password_hash, id_empleado "
+                "SELECT id, nombre_usuario, password_hash, id_empleado, rol "
                 "FROM usuario"
             )
             filas = cursor.fetchall()
@@ -139,6 +141,7 @@ class UsuarioDAO:
                     usuario.nombre_usuario,
                     usuario.password_hash,
                     usuario.empleado_id,
+                    usuario.rol,
                     usuario.id
                 )
             )
