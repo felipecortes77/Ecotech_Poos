@@ -1,0 +1,12 @@
+# SQL del módulo persistencia/indicador_dao.py
+SQL_GUARDAR = """
+INSERT INTO indicador_api
+(fuente, codigo, fecha, valor, unidad, verificado_en)
+VALUES (?, ?, ?, ?, ?, ?)
+ON CONFLICT (fuente, codigo, fecha) DO UPDATE SET
+valor = excluded.valor,
+unidad = excluded.unidad,
+verificado_en = excluded.verificado_en
+"""
+# El método ejecuta este SQL con datos separados,
+# confirma con commit y cierra la conexión.
