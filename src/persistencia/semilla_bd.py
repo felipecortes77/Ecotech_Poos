@@ -5,9 +5,21 @@ from persistencia.empleado_dao import EmpleadoDAO
 from persistencia.usuario_dao import UsuarioDAO
 from servicios.autenticacion import registrar_usuario
 
-ADMIN_NOMBRE_USUARIO = "admin"
-ADMIN_CLAVE = "admin123"
-ADMIN_CORREO = "admin@ecotech.cl"
+USUARIOS_ADMIN = [
+    ("admin123", "juan.perez@ecotech.cl"),
+    ("Admin2026!", "maria.gonzalez@ecotech.cl"),
+    ("Admin2026!", "carlos.silva@ecotech.cl"),
+    ("Admin2026!", "ana.rodriguez@ecotech.cl"),
+    ("Admin2026!", "jose.munoz@ecotech.cl"),
+]
+
+USUARIOS_EMPLEADO = [
+    ("Empleado2026!", "laura.rojas@ecotech.cl"),
+    ("Empleado2026!", "pedro.diaz@ecotech.cl"),
+    ("Empleado2026!", "sofia.contreras@ecotech.cl"),
+    ("Empleado2026!", "miguel.soto@ecotech.cl"),
+    ("Empleado2026!", "carolina.martinez@ecotech.cl"),
+]
 
 
 def cargar_departamentos():
@@ -94,39 +106,59 @@ def cargar_empleados(departamento_demo=None):
         print(f"Creado: {correo}")
 
 
-def cargar_usuario_admin():
-    if UsuarioDAO.buscar_por_nombre_usuario(ADMIN_NOMBRE_USUARIO) is not None:
-        return
+def cargar_usuarios():
+    for rol, usuarios in (
+        ("admin", USUARIOS_ADMIN),
+        ("empleado", USUARIOS_EMPLEADO),
+    ):
+        cuentas_rol = [
+            cuenta for cuenta in UsuarioDAO.listar()
+            if cuenta.rol == rol
+        ]
+        for clave, correo in usuarios:
+            empleado = EmpleadoDAO.buscar_por_correo(correo)
+            if empleado is None:
+                if len(cuentas_rol) >= len(usuarios):
+                    print(
+                        f"Se conserva la cuenta {rol}: no se encontró\nel correo semilla '{correo}'\n(posiblemente actualizado en la ficha)."
+                    )
+                    continue
+                raise ValueError(
+                    f"No existe el empleado asociado al correo '{correo}'."
+                )
 
-    empleado = EmpleadoDAO.buscar_por_correo(ADMIN_CORREO)
-    if empleado is None:
-        departamento = next(
-            (
-                item for item in DepartamentoDAO.listar()
-                if item.nombre == "Desarrollo"
-            ),
-            None
-        )
-        if departamento is None:
-            raise ValueError(
-                "Debe cargar el departamento 'Desarrollo' antes del admin."
+            nombre_usuario = empleado.nombre.strip().lower()
+            cuenta = UsuarioDAO.buscar_por_empleado(empleado.id)
+            cuenta_nombre = UsuarioDAO.buscar_por_nombre_usuario(
+                nombre_usuario
             )
-        empleado = Empleado(
-            "Administrador EcoTech",
-            ADMIN_CORREO,
-            id_departamento=departamento.id
-        )
-        EmpleadoDAO.insertar(empleado)
+            if cuenta_nombre is not None and cuenta_nombre.empleado_id != empleado.id:
+                raise ValueError(
+                    f"El nombre de usuario '{nombre_usuario}' ya está "
+                    "asociado a otro empleado."
+                )
 
-    if UsuarioDAO.buscar_por_empleado(empleado.id) is not None:
-        raise ValueError(
-            "El empleado admin ya tiene una cuenta asociada."
-        )
+            if cuenta is not None:
+                if cuenta.rol != rol:
+                    raise ValueError(
+                        f"El usuario '{nombre_usuario}' ya existe con otro rol."
+                    )
+                if cuenta.nombre_usuario != nombre_usuario:
+                    cuenta.nombre_usuario = nombre_usuario
+                    if not UsuarioDAO.actualizar(cuenta):
+                        raise ValueError(
+                            f"No se pudo actualizar la cuenta de "
+                            f"'{empleado.nombre}'."
+                        )
+                continue
 
-    registrar_usuario(empleado.id, ADMIN_NOMBRE_USUARIO, ADMIN_CLAVE, "admin")
-    print(f"Cuenta admin creada: {ADMIN_NOMBRE_USUARIO}")
+            if cuenta_nombre is not None:
+                raise ValueError(
+                    f"Ya existe una cuenta con el nombre '{nombre_usuario}'."
+                )
 
-
+            registrar_usuario(empleado.id, nombre_usuario, clave, rol)
+            print(f"Cuenta {rol} creada: {nombre_usuario}")
 
 def cargar_gerentes():
     asignaciones = {

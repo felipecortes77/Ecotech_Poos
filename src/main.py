@@ -8,9 +8,13 @@ from persistencia.semilla_bd import (
     cargar_departamentos,
     cargar_empleados,
     cargar_gerentes,
-    cargar_usuario_admin,
+    cargar_usuarios,
 )
-from presentacion.menu_usuario import solicitar_login
+from presentacion.menu_usuario import (
+    consultar_indicador_api,
+    menu_privado,
+    solicitar_login,
+)
 
 
 def main():
@@ -19,7 +23,7 @@ def main():
         cargar_departamentos()
         cargar_empleados()
         cargar_gerentes()
-        cargar_usuario_admin()
+        cargar_usuarios()
     except Exception as e:
         print(f"No se pudo preparar la base de datos: {e}")
         return
@@ -32,19 +36,11 @@ def main():
             continue
 
         if usuario_actual["rol"] == "admin":
-            menu_admin()
+            menu_admin(usuario_actual)
         else:
-            menu_empleado()
-        return
+            menu_privado(usuario_actual)
 
-
-def menu_admin():
-    print("ADMIN")
-
-def menu_empleado():
-    print("EMPLEADO")
-
-def menu_principal():
+def menu_admin(usuario_actual):
     opcion = ""
     while opcion != "0":
         print("\n-----MENU PRINCIPAL ECOTECH -----")
@@ -53,6 +49,7 @@ def menu_principal():
         print("3. Proyectos")
         print("4. Registro de tiempo")
         print("5. Usuarios")
+        print("6. Consultar dólar desde la API")
         print("0. Cerrar Sesion")
 
         opcion = input("Seleccione una opción: ").strip()
@@ -67,9 +64,10 @@ def menu_principal():
             menu_registro_tiempo()
         elif opcion == "5":
             menu_usuarios()
+        elif opcion == "6":
+            consultar_indicador_api(usuario_actual)
         elif opcion == "0":
-            print("Hasta luego.")
-            main()
+            print("Sesión cerrada.")
         else:
             print("Opción no válida.")
 

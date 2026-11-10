@@ -1,4 +1,5 @@
 from dominio.usuario import Usuario
+from dominio.empleado import Empleado
 from persistencia.conexion import abrir_conexion, marcador_sql
 
 
@@ -10,6 +11,28 @@ class UsuarioDAO:
             conexion = abrir_conexion()
             cursor = conexion.cursor()
             marca = marcador_sql()
+            cursor.execute(
+                f"SELECT nombre FROM empleado WHERE id = {marca}",
+                (usuario.empleado_id,)
+            )
+            fila_empleado = cursor.fetchone()
+            if fila_empleado is None:
+                raise ValueError("El empleado seleccionado no existe.")
+
+            nombre_usuario = Usuario.normalizar_usuario(fila_empleado[0])
+            if usuario.nombre_usuario != nombre_usuario:
+                raise ValueError(
+                    "El nombre de usuario debe coincidir con el nombre "
+                    "del empleado asociado."
+                )
+
+            cursor.execute(
+                f"SELECT id FROM usuario WHERE id_empleado = {marca}",
+                (usuario.empleado_id,)
+            )
+            if cursor.fetchone() is not None:
+                raise ValueError("El empleado ya tiene una cuenta de usuario.")
+
             sql = f"""
                 INSERT INTO usuario (nombre_usuario, password_hash, id_empleado, rol)
                 VALUES ({marca}, {marca}, {marca}, {marca})
@@ -124,16 +147,62 @@ class UsuarioDAO:
                 conexion.close()
 
     @staticmethod
-    def actualizar(usuario):
+    def actualizar(usuario, nombre_empleado=None):
         conexion = None
         try:
             conexion = abrir_conexion()
             cursor = conexion.cursor()
             marca = marcador_sql()
+            cursor.execute(
+                f"SELECT id_empleado FROM usuario WHERE id = {marca}",
+                (usuario.id,)
+            )
+            fila_cuenta = cursor.fetchone()
+            if fila_cuenta is None:
+                return False
+            if fila_cuenta[0] != usuario.empleado_id:
+                raise ValueError(
+                    "No se puede cambiar el empleado asociado a la cuenta."
+                )
+            usuario.rol = Usuario.validar_rol(usuario.rol)
+
+            cursor.execute(
+                f"SELECT nombre FROM empleado WHERE id = {marca}",
+                (usuario.empleado_id,)
+            )
+            fila_empleado = cursor.fetchone()
+            if fila_empleado is None:
+                raise ValueError("El empleado asociado no existe.")
+
+            if nombre_empleado is not None:
+                nombre_empleado = Empleado.validar_nombre(nombre_empleado)
+                usuario.nombre_usuario = Usuario.normalizar_usuario(
+                    nombre_empleado
+                )
+                cursor.execute(
+                    f"UPDATE empleado SET nombre = {marca} WHERE id = {marca}",
+                    (nombre_empleado, usuario.empleado_id)
+                )
+            elif usuario.nombre_usuario != Usuario.normalizar_usuario(
+                fila_empleado[0]
+            ):
+                raise ValueError(
+                    "El nombre de usuario debe coincidir con el nombre "
+                    "del empleado asociado."
+                )
+
+            cursor.execute(
+                f"SELECT id FROM usuario WHERE nombre_usuario = {marca} "
+                f"AND id != {marca}",
+                (usuario.nombre_usuario, usuario.id)
+            )
+            if cursor.fetchone() is not None:
+                raise ValueError("Ese nombre de usuario ya está registrado.")
+
             sql = (
                 "UPDATE usuario "
                 f"SET nombre_usuario = {marca}, password_hash = {marca}, "
-                f"id_empleado = {marca} WHERE id = {marca}"
+                f"id_empleado = {marca}, rol = {marca} WHERE id = {marca}"
             )
             cursor.execute(
                 sql,

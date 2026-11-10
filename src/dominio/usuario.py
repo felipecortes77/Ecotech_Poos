@@ -20,9 +20,14 @@ class Usuario:
         nombre = nombre.strip().lower()
         if not cls.MIN_USUARIO <= len(nombre) <= cls.MAX_USUARIO:
             raise ValueError("Usuario fuera del largo permitido.")
-        if not all(c.isascii() and (c.isalnum() or c == "_")
-        for c in nombre):
-            raise ValueError("Use letras ASCII, números o guion bajo.")
+        if not all(
+            c.isalnum() or c in " _-'’."
+            for c in nombre
+        ):
+            raise ValueError(
+                "Use el nombre del empleado, con letras, espacios "
+                "y separadores comunes."
+            )
         return nombre
 
     @classmethod

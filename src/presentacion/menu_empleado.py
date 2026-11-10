@@ -118,11 +118,13 @@ def listar_empleados():
         empleados = EmpleadoDAO.listar()
         if not empleados:
             print("No hay empleados registrados.")
-            return
+            return False
         for item in empleados:
             print(item.mostrar_datos())
+        return True
     except Exception as e:
         print(f"Error al listar los empleados: {e}")
+        return False
 
 
 

@@ -1,4 +1,5 @@
 from dominio.empleado import Empleado
+from dominio.usuario import Usuario
 from persistencia.conexion import abrir_conexion, marcador_sql
 
 
@@ -140,6 +141,7 @@ class EmpleadoDAO:
 
     @staticmethod
     def actualizar(empleado):
+        nombre_usuario = Usuario.normalizar_usuario(empleado.nombre)
         conexion = None
         try:
             conexion = abrir_conexion()
@@ -160,8 +162,14 @@ class EmpleadoDAO:
                     empleado.id
                 )
             )
+            actualizado = cursor.rowcount > 0
+            cursor.execute(
+                f"UPDATE usuario SET nombre_usuario = {marca} "
+                f"WHERE id_empleado = {marca}",
+                (nombre_usuario, empleado.id)
+            )
             conexion.commit()
-            return cursor.rowcount > 0
+            return actualizado
         except Exception:
             if conexion is not None:
                 conexion.rollback()

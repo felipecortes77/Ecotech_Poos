@@ -1,11 +1,12 @@
 from dominio.indicador import Indicador
-from servicios.revisar_api import extraer_primero
+from servicios.revisar_api import extraer_clp
 
 class DeserializadorIndicador:
     @staticmethod
     def desde_api(datos):
-        # Reutiliza la función que extrae y valida los datos.
-        fecha, valor = extraer_primero(datos)
-        
-        # Construye y devuelve un objeto de nuestro proyecto.
-        return Indicador(fecha=fecha, valor=valor)
+        fecha, valor = extraer_clp(datos)
+        return Indicador(
+            fecha=fecha,
+            valor=valor,
+            fuente="exchangerate-api"
+        )

@@ -57,6 +57,18 @@ def crear_tablas():
                 FOREIGN KEY (id_empleado) REFERENCES empleado(id)
                 )
             '''
+            sql_indicador = '''
+                CREATE TABLE IF NOT EXISTS indicador_api (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fuente TEXT NOT NULL,
+                codigo TEXT NOT NULL,
+                fecha TEXT NOT NULL,
+                valor REAL NOT NULL,
+                unidad TEXT NOT NULL,
+                verificado_en TEXT NOT NULL,
+                UNIQUE (fuente, codigo, fecha)
+                )
+            '''
         else:
             sql_departamento = '''
                 CREATE TABLE IF NOT EXISTS departamento (
@@ -103,8 +115,20 @@ def crear_tablas():
                 password_hash VARCHAR(255) NOT NULL,
                 id_empleado INT NOT NULL UNIQUE,
                 rol VARCHAR(20) NOT NULL DEFAULT 'empleado',
-                    CHECK (rol IN ('admin', 'empleado'))
+                    CHECK (rol IN ('admin', 'empleado')),
                 FOREIGN KEY (id_empleado) REFERENCES empleado(id)
+                )
+            '''
+            sql_indicador = '''
+                CREATE TABLE IF NOT EXISTS indicador_api (
+                id INT PRIMARY KEY AUTO_INCREMENT,
+                fuente VARCHAR(100) NOT NULL,
+                codigo VARCHAR(50) NOT NULL,
+                fecha DATE NOT NULL,
+                valor DOUBLE NOT NULL,
+                unidad VARCHAR(30) NOT NULL,
+                verificado_en VARCHAR(40) NOT NULL,
+                UNIQUE KEY uq_indicador_api_fecha (fuente, codigo, fecha)
                 )
             '''
 
@@ -113,6 +137,7 @@ def crear_tablas():
         cursor.execute(sql_empleado)
         cursor.execute(sql_usuario)
         cursor.execute(sql_registro)
+        cursor.execute(sql_indicador)
 
         if obtener_motor() == "sqlite":
             cursor.execute("PRAGMA table_info(proyecto)")

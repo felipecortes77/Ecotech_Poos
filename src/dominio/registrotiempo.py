@@ -1,5 +1,13 @@
 class RegistroTiempo:
-    def __init__(self, id_empleado: int, id_proyecto: int, fecha: str, horas: float, descripcion: str, id: int = None):
+    def __init__(
+        self,
+        id_empleado: int,
+        id_proyecto: int,
+        fecha: str,
+        horas: float,
+        descripcion: str = "",
+        id: int = None
+    ):
         self._id = id
         self._id_empleado = id_empleado
         self._id_proyecto = id_proyecto

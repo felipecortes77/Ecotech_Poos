@@ -47,4 +47,23 @@ Con el entorno virtual activo y desde la raiz del repositorio:
 python src/main.py
 ```
 
-El menu principal permite entrar al menu de empleados, menu de departamentos, menu de proyectos y menus de registro de tiempo.
+Al iniciar, se cargan cinco cuentas de administrador y cinco cuentas de empleado,
+asociadas a empleados existentes. Las cuentas de empleado solo pueden consultar
+su ficha, actualizar su nombre y correo, y ver sus propios registros de tiempo.
+Los usuarios autenticados también pueden consultar la cotización del dólar
+desde la API de ExchangeRate-API en sus respectivos menús.
+Cada consulta guarda en `indicador_api` la fecha UTC y el valor CLP/USD:
+si ya existe un valor para esa fecha, se actualiza; de lo contrario, se agrega
+un nuevo día al historial.
+
+Credenciales iniciales de demostracion:
+
+- El nombre de usuario de cada cuenta es el nombre de su empleado asociado.
+  Los administradores son Juan Perez (`admin123`), Maria Gonzalez, Carlos
+  Silva, Ana Rodriguez y Jose Muñoz (los cuatro últimos usan `Admin2026!`).
+- Los empleados son Laura Rojas, Pedro Diaz, Sofia Contreras, Miguel Soto y
+  Carolina Martinez; todos usan `Empleado2026!`.
+
+El menu de administrador permite administrar empleados, departamentos,
+proyectos, registros de tiempo y usuarios. Cambia las contraseñas iniciales
+antes de utilizar estas cuentas fuera de un entorno de demostracion.
